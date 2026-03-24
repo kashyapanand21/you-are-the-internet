@@ -15,33 +15,66 @@ const sections = document.querySelectorAll('.era-section');
 const timelineMarkers = document.querySelectorAll('.timeline-marker');
 
 let currentEra = 'arpanet';
+let userHasInteracted = false;
+
+// Set flag on first user gesture anywhere on the page
+document.addEventListener('click', () => {
+  userHasInteracted = true;
+  if (audioCtx) audioCtx.resume();
+}, { once: false });
+
+document.addEventListener('keydown', () => {
+  userHasInteracted = true;
+  if (audioCtx) audioCtx.resume();
+}, { once: false });
+
+const sectionRatios = new Map();
 
 const eraObserver = new IntersectionObserver((entries) => {
+  // Update the visibility ratio for each section that changed
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const era = entry.target.dataset.era;
-      if (era && era !== currentEra) {
-        switchEra(era, currentEra);
-        currentEra = era;
-      }
+    sectionRatios.set(entry.target, entry.intersectionRatio);
+  });
+
+  // Find whichever section is currently most visible
+  let maxRatio = 0;
+  let dominantSection = null;
+
+  sectionRatios.forEach((ratio, section) => {
+    if (ratio > maxRatio) {
+      maxRatio = ratio;
+      dominantSection = section;
     }
   });
-}, { threshold: 0.3 });
+
+  if (dominantSection && maxRatio > 0.1) {
+    const era = dominantSection.dataset.era;
+    if (era && era !== currentEra) {
+      switchEra(era, currentEra);
+      currentEra = era;
+    }
+  }
+}, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] });
 
 sections.forEach(section => eraObserver.observe(section));
 
+let glitchFired = false;
+
 function switchEra(newEra, oldEra) {
-  // Update body attribute — CSS cascade does the rest
   document.body.dataset.era = newEra;
 
-  // Update timeline bar active dot
   timelineMarkers.forEach(marker => {
     marker.classList.toggle('active', marker.dataset.eraMarker === newEra);
   });
 
-  // Trigger glitch only on arpanet → dotcom transition
-  if (oldEra === 'arpanet' && newEra === 'dotcom') {
+  if (oldEra === 'arpanet' && newEra === 'dotcom' && !glitchFired) {
+    glitchFired = true;
     triggerGlitch();
+  }
+
+  if (oldEra === 'dotcom' && newEra !== 'dotcom') {
+    document.querySelectorAll('.fake-popup').forEach(p => p.remove());
+    popupCount = 0;
   }
 }
 
@@ -78,9 +111,15 @@ let typingStarted = false;
 
 function typeNextChar() {
   if (charIndex < storyText.length) {
-    typedOutput.textContent += storyText[charIndex];
+    const char = storyText[charIndex];
+    typedOutput.textContent += char;
     charIndex++;
-    // Random delay between 30ms and 90ms — feels like a real terminal
+
+    // Only play sound for visible characters, not spaces or newlines
+    if (char !== ' ' && char !== '\n' && userHasInteracted) {
+      playTypingSound();
+    }
+
     setTimeout(typeNextChar, Math.random() * 60 + 30);
   }
 }
@@ -187,28 +226,32 @@ if (likeBtn) {
   likeBtn.addEventListener('click', () => {
     likes++;
 
-    // Phase 1: 0–5 clicks — normal
+    // Phase 1: 1–5 clicks — normal, satisfying
     if (likes <= 5) {
       likeCount.textContent = likes;
       likeBtn.classList.add('liked');
       likeBtn.classList.remove('phase2', 'phase3');
+      likeCount.style.filter = 'none';
       playLikeSound(400);
     }
-    // Phase 2: 6–15 clicks — counter jumps, urgency builds
-    else if (likes <= 15) {
-      likes += 1; // double increment
+    // Phase 2: 6–15 clicks — double increment, urgency builds
+    else if (likes <= 30) {
+      likes += 1;
       likeCount.textContent = likes;
       likeBtn.classList.add('phase2');
       likeBtn.classList.remove('phase3');
-      playLikeSound(500);
+      likeCount.style.filter = 'none';
+      playLikeSound(500 + (likes * 3));
     }
-    // Phase 3: 15+ clicks — numbers blur, layout shakes
+    // Phase 3: 30+ clicks — chaos, silence, blur, shake
     else {
-      likes += Math.floor(Math.random() * 10 + 5);
+      likes += Math.floor(Math.random() * 15 + 5);
       likeCount.textContent = likes;
       likeBtn.classList.add('phase3');
-      likeCount.style.filter = 'blur(1.5px)';
-      // Silent — no sound in phase 3 (the silence IS the critique)
+      likeBtn.classList.remove('phase2');
+      likeCount.style.filter = 'blur(2px)';
+      likeCount.style.transition = 'filter 0.1s';
+      // No sound — silence is the critique
     }
   });
 }
@@ -358,8 +401,188 @@ function playTypingSound() {
 }
 
 /* ============================================
+   12. DOT-COM — Visitor counter animation
+       Counts up erratically when section is visible
+   ============================================ */
+const visitorCount = document.getElementById('visitor-count');
+let counterRunning = false;
+let currentCount = 4294967295;
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !counterRunning) {
+      counterRunning = true;
+      runCounter();
+    }
+    if (!entry.isIntersecting) {
+      counterRunning = false;
+    }
+  });
+}, { threshold: 0.3 });
+
+const dotcomSection = document.getElementById('dotcom');
+if (dotcomSection) counterObserver.observe(dotcomSection);
+
+function runCounter() {
+  if (!counterRunning) return;
+  // Random jump between 1 and 47
+  currentCount += Math.floor(Math.random() * 47 + 1);
+  if (visitorCount) {
+    visitorCount.textContent = currentCount.toLocaleString();
+  }
+  // Random delay between 200ms and 900ms — erratic feel
+  setTimeout(runCounter, Math.random() * 700 + 200);
+}
+
+/* ============================================
+   13. GSAP SCROLL REVEALS
+       Text and elements animate in as each
+       section enters the viewport.
+       Wrapped in typeof check for safety.
+   ============================================ */
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ARPANET — enter prompt fades up
+  gsap.from('.enter-prompt', {
+    scrollTrigger: {
+      trigger: '#arpanet',
+      start: 'top 60%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    y: 20,
+    duration: 1,
+    delay: 2
+  });
+
+  // DOTCOM — heading slams in
+  gsap.from('#dotcom h2', {
+    scrollTrigger: {
+      trigger: '#dotcom',
+      start: 'top 60%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    scale: 1.4,
+    duration: 0.4,
+    ease: 'power3.out'
+  });
+
+  // DOTCOM — marquee slides in from left
+  gsap.from('#dotcom marquee', {
+    scrollTrigger: {
+      trigger: '#dotcom',
+      start: 'top 50%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    x: -60,
+    duration: 0.5,
+    delay: 0.2,
+    ease: 'power2.out'
+  });
+
+  // DOTCOM — button bounces in
+  gsap.from('.dotcom-btn', {
+    scrollTrigger: {
+      trigger: '#dotcom',
+      start: 'top 40%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    y: 30,
+    duration: 0.5,
+    delay: 0.4,
+    ease: 'back.out(1.7)'
+  });
+
+  // SOCIAL — card slides up
+  gsap.from('.social-card', {
+    scrollTrigger: {
+      trigger: '#social',
+      start: 'top 60%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    y: 40,
+    duration: 0.7,
+    ease: 'power2.out'
+  });
+
+  // MOBILE — frame slides in from bottom
+  gsap.from('#mobile-frame', {
+    scrollTrigger: {
+      trigger: '#mobile',
+      start: 'top 60%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    y: 60,
+    duration: 0.8,
+    ease: 'power2.out'
+  });
+
+  // MOBILE — toggle button fades in
+  gsap.from('.view-toggle-row', {
+    scrollTrigger: {
+      trigger: '#mobile',
+      start: 'top 50%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    duration: 0.5,
+    delay: 0.4
+  });
+
+  // WEB3 — glass card fades up
+  gsap.from('.glass-card', {
+    scrollTrigger: {
+      trigger: '#web3',
+      start: 'top 60%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    y: 50,
+    duration: 1,
+    ease: 'power2.out'
+  });
+
+  // WEB3 — glass card heading
+  gsap.from('.glass-card h2', {
+    scrollTrigger: {
+      trigger: '#web3',
+      start: 'top 55%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    x: -30,
+    duration: 0.8,
+    delay: 0.3,
+    ease: 'power2.out'
+  });
+
+  // WEB3 — wallet button
+  gsap.from('.wallet-btn', {
+    scrollTrigger: {
+      trigger: '#web3',
+      start: 'top 40%',
+      toggleActions: 'play none none none'
+    },
+    opacity: 0,
+    y: 20,
+    duration: 0.6,
+    delay: 0.6,
+    ease: 'back.out(1.4)'
+  });
+
+} else {
+  console.warn('GSAP not loaded — scroll reveals skipped');
+}
+
+/* ============================================
    11. CONSOLE EASTER EGG
-       Judges who open DevTools will see this.
    ============================================ */
 console.log(
   '%c YOU ARE THE INTERNET ',
