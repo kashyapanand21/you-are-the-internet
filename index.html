@@ -1,125 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>You Are the Internet</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You Are the Internet</title>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=VT323&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=VT323&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet" />
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" ></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" ></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 
 <body data-era="arpanet">
+    <div id="custom-cursor">█</div>
 
-  <!-- TIMELINE PROGRESS BAR -->
-  <nav id="timeline">
-    <div class="timeline-track">
-      <div class="timeline-marker active" data-era-marker="arpanet">
-        <span class="marker-dot"></span>
-        <span class="marker-label">1969</span>
-      </div>
-      <div class="timeline-marker" data-era-marker="dotcom">
-        <span class="marker-dot"></span>
-        <span class="marker-label">1994</span>
-      </div>
-      <div class="timeline-marker" data-era-marker="social">
-        <span class="marker-dot"></span>
-        <span class="marker-label">2006</span>
-      </div>
-      <div class="timeline-marker" data-era-marker="mobile">
-        <span class="marker-dot"></span>
-        <span class="marker-label">2015</span>
-      </div>
-      <div class="timeline-marker" data-era-marker="web3">
-        <span class="marker-dot"></span>
-        <span class="marker-label">2023</span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- SECTION 1: ARPANET -->
-  <section id="arpanet" data-era="arpanet" class="era-section">
-    <div class="section-inner">
-      <div id="terminal-text">
-        <span id="typed-output"></span><span id="cursor" class="blink">█</span>
-      </div>
-      <p class="enter-prompt">&#62; Press <kbd>ENTER</kbd> or scroll to begin your journey_</p>
-    </div>
-  </section>
-
-  <!-- SECTION 2: DOT-COM -->
-  <section id="dotcom" data-era="dotcom" class="era-section">
-    <div class="section-inner">
-      <h2>WELCOME TO THE WEB!!</h2>
-      <marquee>🚧 UNDER CONSTRUCTION 🚧 &nbsp;&nbsp;&nbsp; BEST VIEWED IN NETSCAPE 4.0 &nbsp;&nbsp;&nbsp; 🚧 UNDER CONSTRUCTION 🚧</marquee>
-      <p class="visitor-counter">Visitors: <span id="visitor-count">4294967295</span></p>
-      <button class="dotcom-btn" id="click-here-btn">&#62;&#62; CLICK HERE!! &#60;&#60;</button>
-      <div id="popup-container"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: SOCIAL MEDIA -->
-  <section id="social" data-era="social" class="era-section">
-    <div class="section-inner">
-      <div class="social-card">
-        <div class="social-profile">
-          <div class="avatar"></div>
-          <div>
-            <strong>The Internet</strong>
-            <span class="timestamp">just now</span>
-          </div>
+    <!-- TIMELINE PROGRESS BAR -->
+    <nav id="timeline">
+        <div class="timeline-track">
+            <div class="timeline-marker active" data-era-marker="arpanet">
+                <span class="marker-dot"></span>
+                <span class="marker-label">1969</span>
+            </div>
+            <div class="timeline-marker" data-era-marker="dotcom">
+                <span class="marker-dot"></span>
+                <span class="marker-label">1994</span>
+            </div>
+            <div class="timeline-marker" data-era-marker="social">
+                <span class="marker-dot"></span>
+                <span class="marker-label">2006</span>
+            </div>
+            <div class="timeline-marker" data-era-marker="mobile">
+                <span class="marker-dot"></span>
+                <span class="marker-label">2015</span>
+            </div>
+            <div class="timeline-marker" data-era-marker="web3">
+                <span class="marker-dot"></span>
+                <span class="marker-label">2023</span>
+            </div>
         </div>
-        <p class="social-post">We stopped building websites for people and started building networks of people. It became personal — and it was designed to keep you there.</p>
-        <div class="social-actions">
-          <button id="like-btn" class="like-btn">&#9825; Like <span id="like-count">0</span></button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </nav>
 
-  <!-- SECTION 4: MOBILE -->
-  <section id="mobile" data-era="mobile" class="era-section">
-    <div class="section-inner">
-      <div class="view-toggle-row">
-        <button id="view-toggle" class="toggle-btn">Switch to Desktop View</button>
-      </div>
-      <div id="mobile-frame">
-        <div class="phone-status-bar">
-          <span>9:41</span>
-          <span>&#9679;&#9679;&#9679; 100%</span>
+    <!-- SECTION 1: ARPANET -->
+    <section id="arpanet" data-era="arpanet" class="era-section">
+        <div class="section-inner">
+            <div id="terminal-text">
+                <span id="typed-output"></span><span id="cursor" class="blink">█</span>
+            </div>
+            <p class="enter-prompt">&#62; Press <kbd>ENTER</kbd> or scroll to begin your journey_</p>
         </div>
-        <div class="phone-content">
-          <h3>Five billion people.</h3>
-          <p>They joined the internet from devices that fit in a pocket. The web had to learn to breathe in a smaller box.</p>
-          <button class="phone-btn">Open App</button>
-          <button class="phone-btn">Share</button>
+    </section>
+
+    <!-- SECTION 2: DOT-COM -->
+    <section id="dotcom" data-era="dotcom" class="era-section">
+        <div class="section-inner">
+            <h2>WELCOME TO THE WEB!!</h2>
+            <marquee>🚧 UNDER CONSTRUCTION 🚧 &nbsp;&nbsp;&nbsp; BEST VIEWED IN NETSCAPE 4.0 &nbsp;&nbsp;&nbsp; 🚧 UNDER
+                CONSTRUCTION 🚧</marquee>
+            <p class="visitor-counter">Visitors: <span id="visitor-count">4294967295</span></p>
+            <button class="dotcom-btn" id="click-here-btn">&#62;&#62; CLICK HERE!! &#60;&#60;</button>
+            <div id="popup-container"></div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SECTION 5: WEB3 -->
-  <section id="web3" data-era="web3" class="era-section">
-    <div class="section-inner">
-      <div id="particles-container"></div>
-      <div class="glass-card">
-        <h2>The Unfinished Web</h2>
-        <p>Two weeks before this hackathon, I built <strong>TrustSplit</strong> — a bill-splitting application on the blockchain. Not because it was easy. Because the old web asked you to trust a company. The new web asks you to trust math.</p>
-        <p>I built this site to understand how we got here — and where we are going.</p>
-        <button class="wallet-btn">Connect Wallet</button>
-      </div>
-    </div>
-  </section>
+    <!-- SECTION 3: SOCIAL MEDIA -->
+    <section id="social" data-era="social" class="era-section">
+        <div class="section-inner">
+            <div class="social-card">
+                <div class="social-profile">
+                    <div class="avatar"></div>
+                    <div>
+                        <strong>The Internet</strong>
+                        <span class="timestamp">just now</span>
+                    </div>
+                </div>
+                <p class="social-post">We stopped building websites for people and started building networks of people.
+                    It became personal — and it was designed to keep you there.</p>
+                <div class="social-actions">
+                    <button id="like-btn" class="like-btn">&#9825; Like <span id="like-count">0</span></button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script src="script.js"></script>
+    <!-- SECTION 4: MOBILE -->
+    <section id="mobile" data-era="mobile" class="era-section">
+        <button id="view-toggle">Switch to Desktop View</button>
+        <div class="mobile-viewport">
+            <div class="phone-status-bar">
+                <span class="status-time">9:41</span>
+                <span class="status-icons">▲▲▲ WiFi ■■■</span>
+            </div>
+            <h2>Everything, Everywhere</h2>
+            <p class="era-year">2010s — Mobile Internet</p>
+            <p class="section-story">
+                Five billion people joined the internet from a screen this wide.
+                Every website had to learn to live here. Feel what that meant.
+            </p>
+            <p class="section-story">
+                The web shrank. Then the world grew into it.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 5: WEB3 -->
+    <section id="web3" data-era="web3" class="era-section">
+        <div class="section-inner">
+            <div id="particles-container"></div>
+            <div class="glass-card">
+                <p class="web3-eyebrow">2020s — The Unfinished Web</p>
+                <h2>The Next Chapter<br>Isn't Written Yet</h2>
+                <p>Two weeks before this hackathon, I built <strong>TrustSplit</strong> — a bill-splitting application
+                    on the blockchain. Not because it was easy. Because the old web asked you to trust a company. The
+                    new web asks you to trust math.</p>
+                <p>I built this site to understand how we got here — and where we are going. Every section you scrolled
+                    through was a layer of infrastructure that someone, somewhere, built from nothing.</p>
+                <p class="web3-byline">— Anand Kashyap, 2025</p>
+                <button class="wallet-btn">⬡ Connect Wallet</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
 </body>
+
 </html>

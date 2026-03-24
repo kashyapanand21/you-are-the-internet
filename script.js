@@ -4,6 +4,18 @@
 
 // ── BOOT: set default era before observer fires ──
 document.body.dataset.era = 'arpanet';
+/* ============================================
+   CUSTOM CURSOR — ARPANET ERA ONLY
+   Tracks mouse. Visible only when data-era=arpanet.
+   CSS handles show/hide via opacity.
+   ============================================ */
+const customCursor = document.getElementById('custom-cursor');
+
+document.addEventListener('mousemove', (e) => {
+  if (customCursor) {
+    customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  }
+});
 
 /* ============================================
    1. IntersectionObserver — ERA SWITCHING
@@ -259,19 +271,6 @@ if (likeBtn) {
 /* ============================================
    7. MOBILE — Width toggle
    ============================================ */
-const viewToggle = document.getElementById('view-toggle');
-const mobileFrame = document.getElementById('mobile-frame');
-let isDesktopView = false;
-
-if (viewToggle && mobileFrame) {
-  viewToggle.addEventListener('click', () => {
-    isDesktopView = !isDesktopView;
-    mobileFrame.classList.toggle('desktop-view', isDesktopView);
-    viewToggle.textContent = isDesktopView
-      ? 'Switch to Mobile View'
-      : 'Switch to Desktop View';
-  });
-}
 
 /* ============================================
    8. WEB3 — Particles
@@ -511,11 +510,11 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     ease: 'power2.out'
   });
 
-  // MOBILE — frame slides in from bottom
-  gsap.from('#mobile-frame', {
+ // MOBILE — viewport slides in from bottom
+  gsap.from('.mobile-viewport', {
     scrollTrigger: {
       trigger: '#mobile',
-      start: 'top 60%',
+      start: 'top 80%',
       toggleActions: 'play none none none'
     },
     opacity: 0,
@@ -525,28 +524,15 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
   });
 
   // MOBILE — toggle button fades in
-  gsap.from('.view-toggle-row', {
+  gsap.from('#view-toggle', {
     scrollTrigger: {
       trigger: '#mobile',
-      start: 'top 50%',
+      start: 'top 70%',
       toggleActions: 'play none none none'
     },
     opacity: 0,
     duration: 0.5,
     delay: 0.4
-  });
-
-  // WEB3 — glass card fades up
-  gsap.from('.glass-card', {
-    scrollTrigger: {
-      trigger: '#web3',
-      start: 'top 60%',
-      toggleActions: 'play none none none'
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-    ease: 'power2.out'
   });
 
   // WEB3 — glass card heading
@@ -596,3 +582,17 @@ console.log(
   '%c TrustSplit — bill splitting on the blockchain. Trust math, not companies. ',
   'background: #0a0a0f; color: #e2e8f0; font-family: monospace; font-size: 11px; padding: 4px 16px;'
 );
+
+// ── Mobile View Toggle ────────────────────────
+const viewToggleBtn = document.getElementById('view-toggle');
+const mobileViewport = document.querySelector('.mobile-viewport');
+
+if (viewToggleBtn && mobileViewport) {
+  viewToggleBtn.addEventListener('click', () => {
+    const isNowDesktop = mobileViewport.classList.toggle('desktop-view');
+    viewToggleBtn.textContent = isNowDesktop
+      ? 'Switch to Mobile View'
+      : 'Switch to Desktop View';
+  });
+}
+// ── End Mobile View Toggle ────────────────────

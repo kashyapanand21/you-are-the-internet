@@ -439,6 +439,65 @@ body {
   font-family: system-ui;
 }
 
+/* ── Mobile Section Layout ───────────────────── */
+
+#mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 20px;
+  min-height: 100vh;
+}
+
+#view-toggle {
+  margin-bottom: 32px;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+#view-toggle:hover {
+  opacity: 0.85;
+}
+
+.mobile-viewport {
+  width: 390px;
+  max-width: 100%;
+  margin: 0 auto;
+  transition: width 0.5s ease;
+  background: var(--bg);
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.mobile-viewport {
+  opacity: 1; /* fallback if GSAP does not fire */
+}
+
+.mobile-viewport.desktop-view {
+  width: 100%;
+  border-radius: 0;
+  border-color: transparent;
+}
+
+.phone-status-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-bottom: 24px;
+  font-family: system-ui, sans-serif;
+}
+
+/* ── End Mobile Section ───────────────────────── */
+
 /* ============================================
    SECTION 5 — WEB3
    ============================================ */
@@ -491,51 +550,59 @@ body {
 .glass-card {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  padding: clamp(24px, 5vw, 48px);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: clamp(32px, 5vw, 56px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-card h2 {
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(28px, 4vw, 48px);
   font-weight: 600;
-  color: var(--text);
-  margin-bottom: 24px;
+  color: #ffffff;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .glass-card p {
-  font-size: clamp(15px, 2vw, 18px);
+  font-size: clamp(15px, 2vw, 17px);
   font-weight: 300;
-  line-height: 1.8;
-  color: rgba(226, 232, 240, 0.8);
+  line-height: 1.9;
+  color: rgba(226, 232, 240, 0.75);
   margin-bottom: 20px;
+  max-width: 60ch;
 }
-
 .glass-card strong {
   color: var(--accent);
   font-weight: 600;
 }
 
 .wallet-btn {
-  margin-top: 8px;
+  margin-top: 16px;
   padding: 14px 32px;
-  background: var(--accent);
+  background: transparent;
   color: #fff;
-  border: none;
+  border: 1px solid rgba(99, 102, 241, 0.6);
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 15px;
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.2s;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+  letter-spacing: 0.02em;
 }
 
 .wallet-btn:hover {
-  opacity: 0.85;
-  transform: translateY(-1px);
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 1);
+  transform: translateY(-2px);
 }
 
 /* ============================================
@@ -586,4 +653,43 @@ body {
   .marker-label {
     font-size: 9px;
   }
+}
+
+/* ============================================
+   CUSTOM CURSOR — ARPANET ERA
+   ============================================ */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: 'Space Mono', monospace;
+  font-size: 18px;
+  color: #00ff41;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  user-select: none;
+}
+
+[data-era="arpanet"] #custom-cursor {
+  opacity: 1;
+}
+
+.web3-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+
+.web3-byline {
+  font-size: 13px;
+  color: rgba(226, 232, 240, 0.4);
+  font-style: italic;
+  margin-top: -8px;
+  margin-bottom: 24px;
 }
