@@ -597,7 +597,9 @@ console.log(
   'background: #0a0a0f; color: #e2e8f0; font-family: monospace; font-size: 11px; padding: 4px 16px;'
 );
 
-// ── Mobile View Toggle ────────────────────────
+/* ============================================
+   MOBILE VIEW TOGGLE
+   ============================================ */
 const viewToggleBtn = document.getElementById('view-toggle');
 const mobileViewport = document.querySelector('.mobile-viewport');
 
