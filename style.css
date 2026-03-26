@@ -582,16 +582,20 @@ body {
     align-self: center;
   }
 
+  /* Portrait phone ratio — narrow and tall */
   .mobile-viewport {
-    width: 300px;
+    width: 260px;
+    height: min(520px, calc(100vh - 200px));
+    border-radius: 40px;
   }
 
+  /* Desktop view on small screen — full width, short */
   .mobile-viewport.desktop-view {
-    width: 100%;
-    border-radius: 16px;
+      width: min(500px, 85vw);
+      height: 360px;
+      border-radius: 16px;
   }
 }
-
 /* ── End Mobile Section ───────────────────────── */
 
 /* ============================================
