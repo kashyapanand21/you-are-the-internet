@@ -4,16 +4,30 @@
 
 // ── BOOT: set default era before observer fires ──
 document.body.dataset.era = 'arpanet';
+
 /* ============================================
    CUSTOM CURSOR — ARPANET ERA ONLY
-   Tracks mouse. Visible only when data-era=arpanet.
-   CSS handles show/hide via opacity.
    ============================================ */
 const customCursor = document.getElementById('custom-cursor');
 
 document.addEventListener('mousemove', (e) => {
   if (customCursor) {
     customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    customCursor.style.visibility = 'visible';
+  }
+});
+
+// Hide when mouse leaves browser window
+document.addEventListener('mouseleave', () => {
+  if (customCursor) {
+    customCursor.style.visibility = 'hidden';
+  }
+});
+
+// Show again when mouse re-enters
+document.addEventListener('mouseenter', () => {
+  if (customCursor) {
+    customCursor.style.visibility = 'visible';
   }
 });
 

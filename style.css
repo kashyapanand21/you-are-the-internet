@@ -658,16 +658,18 @@ body {
 /* ============================================
    CUSTOM CURSOR — ARPANET ERA
    ============================================ */
+
 #custom-cursor {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: -100px;
+  left: -100px;
   pointer-events: none;
   z-index: 9999;
   font-family: 'Space Mono', monospace;
   font-size: 18px;
   color: #00ff41;
   opacity: 0;
+  visibility: hidden;
   transition: opacity 0.2s ease;
   user-select: none;
 }
