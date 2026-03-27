@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 /* ============================================
    CSS VARIABLE SYSTEM — THE ENGINE
    Each [data-era] block is a complete theme.
