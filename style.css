@@ -747,11 +747,24 @@ body {
 
 @media (max-width: 480px) {
   .timeline-track {
-    padding: 0 8px;
+    padding: 0 4px;
+    max-width: 100%;
+    gap: 0;
+  }
+
+  .timeline-marker {
+    flex: 1;
+    min-width: 0;
   }
 
   .marker-label {
-    font-size: 9px;
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .marker-dot {
+    width: 8px;
+    height: 8px;
   }
 }
 
